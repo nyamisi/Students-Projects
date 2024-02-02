@@ -1,0 +1,131 @@
+---
+title: "Text analysis of special project titles for third year students pursuing Bsc. Biology and Bsc. Aquaculture at UDOM"
+author: "Nyamisi Peter"
+date: "`r format(Sys.time(), '%d/%m/%Y')`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+```
+
+
+```{r}
+require(tidyverse)
+require(readxl)
+require(ggwordcloud)
+require(magrittr)
+require(tidytext)
+require(wordcloud)
+require(RColorBrewer)
+require(magrittr)
+require(tm)
+```
+
+Analysis of text in titles of special project for third year students at department of Biology University of Dodoma was done in r using **ggwordcloud** package. Data was first imported into r using *read_excel* function of **readxl**. Two color pallete was also imported using *brewer.pal* function of **RColorBrewer** package.
+
+```{r}
+wanafunzi = read_excel("SUPERVISION_COMBINED.xls") %>% 
+  janitor::clean_names() 
+
+wanafunzi %>%
+  filter(supervisor == "NYAMISI MOMBIA")
+
+pal = brewer.pal(n = 8, name = "Accent")
+
+pal1 = brewer.pal(8,"Dark2")
+```
+
+Only title variable was selected and converted to vector using *pull* function. The vectorized file was then cleaned using *tm_map* function of **tm** package. Different punctuation, numbers, stop words and white spaces were removed in the text. Text in upper case were also converted to lower case and only English words were selected. These made plain text without any character within. 
+
+```{r}
+
+pt = wanafunzi %>% 
+  pull(tittle) %>% 
+  VectorSource() %>% 
+  Corpus() %>% 
+  # below is how to clean text in data
+  tm_map(removePunctuation) %>% 
+  tm_map(removeNumbers) %>%  
+  tm_map(tolower) %>% 
+  tm_map(removeWords, stopwords("english")) %>% 
+  tm_map(stripWhitespace) %>% 
+  tm_map(PlainTextDocument)
+
+```
+
+Then, the content of the content of the plain text was selected and converted to tibble format using *as_tibble* function of **dplyr** package. The string was split to remove some patterns within and converted to data frame.
+
+```{r}
+pt2 = pt$content$content %>% 
+  as_tibble() %>% 
+  stringr::str_split(pattern = " ") %>% 
+  as.data.frame() %>% 
+  rename(text = 1)
+
+
+
+  # pt2 %>% head()
+```
+
+Similar text were grouped together and their counts were determined and arranged in descending order. 
+
+```{r}
+
+
+pt.student = pt2 %>% 
+  mutate(text = if_else(text %in% c("assessments", "assessment", "assesment"), "assessment", text)) %>% 
+  group_by(text) %>% 
+  count() %>% 
+  arrange(desc(n)) %>% 
+  ungroup()
+
+
+
+```
+
+The word cloud was then plotted using *ggwordcloud* function of **ggwordcloud** package. Only text with their frequency were used in plotting and the color pallete was chosen. The result shows that there are some remaining string in some text which need to be cleaned prior plotting.
+
+```{r}
+pt.student %$% 
+  ggwordcloud::ggwordcloud(words = text,
+                           freq = n,
+                           random.order = FALSE,
+                           max.words = 120,
+                           colors = pal)
+
+```
+
+The cleanliness and removal of string need to be done in microsoft spreadsheet. Thus, file was exported to csv format and the cleanliness was done and later data was re-imported to r.
+
+```{r}
+#pt2 %>% write_csv("sp.csv")
+
+sp = read_csv("sp.csv") %>% 
+  rename(text = 1)
+
+```
+
+Again, similar text were grouped together and the count for each were determined. 
+
+```{r}
+sp1 = sp %>% 
+  mutate(text = if_else(text %in% c("asessment", "assesment", "assesments", "assessments", "assesssments", "assessment"), "assessment", text)) %>%
+  group_by(text) %>% 
+  count() %>% 
+  arrange(desc(n)) %>% 
+  ungroup()
+
+
+```
+
+The text were again re-plotted using *ggwordcloud* function of **ggwordcloud** package. The result shows that many titles have the word assessment within and many of these studies will be conducted in Dodoma. Other words like growth, effects, fish, municipal and district also dominated many titles.
+
+```{r}
+sp1 %$% 
+  ggwordcloud::ggwordcloud(words = text,
+                           freq = n,
+                           random.order = FALSE,
+                           max.words = 120,
+                           colors = pal1) 
+```

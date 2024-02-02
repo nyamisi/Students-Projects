@@ -1,0 +1,46 @@
+---
+title: "Untitled"
+author: "Nyamisi Peter"
+date: "12/10/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+require(qrcode)
+require(tidyverse)
+```
+
+
+```{r}
+
+qrcode::qr_code(x = "michi", ecl = "L")
+```
+
+              
+ ▗▄▄▄ ▖▄▗▄▄▄  
+ ▐▗▄▐▐▌▚▐▗▄▐  
+ ▐▐█▐▗▘▚▐▐█▐  
+ ▐▄▄▟▐▗▜▐▄▄▟  
+ ▗▖▖▗▞█▀▗▄▗▖  
+ ▐█▄▚▜▙▗▞ █▜  
+ ▐▝▞▙▄▝▚▗▗▘▞  
+ ▗▄▄▄▐▟▘▖▛▘▞  
+ ▐▗▄▐ ▌▛▚█ ▗  
+ ▐▐█▐▝▟▚ ▚▐▜  
+ ▐▄▄▟▐▞▄▀▝▖▖  
+              
+              
+
+```{r}
+qrcode::qrcode_gen(dataString = "michi")
+
+qrcode::qrcode_gen(dataString = "Nyamisi Peter, University of Dodoma")
+
+
+
+```
+

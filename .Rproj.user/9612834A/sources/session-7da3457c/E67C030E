@@ -1,0 +1,27 @@
+{
+    "id": "E67C030E",
+    "path": "~/sp/qr_code.Rmd",
+    "project_path": "qr_code.Rmd",
+    "type": "r_markdown",
+    "hash": "2869359966",
+    "contents": "",
+    "dirty": false,
+    "created": 1676630560469.0,
+    "source_on_save": false,
+    "relative_order": 1,
+    "properties": {
+        "source_window_id": "",
+        "Source": "Source",
+        "cursorPosition": "30,0",
+        "scrollLine": "21",
+        "last_setup_crc32": "7da3457cbb338d19"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1676697704,
+    "encoding": "ISO8859-1",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1676697704836,
+    "read_only": false,
+    "read_only_alternatives": []
+}
